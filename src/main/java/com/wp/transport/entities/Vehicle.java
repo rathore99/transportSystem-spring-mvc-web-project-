@@ -7,8 +7,6 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -22,8 +20,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Entity
 public class Vehicle {
 	
-	@Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
-	private int vehicleId;
+	@Id 
 	@Column(length = 10)
 	private String registrationNo;
 	private String chasisNo;
@@ -41,16 +38,16 @@ public class Vehicle {
 	private String insurancePaper;
 	private boolean status = false;
 	
-	@ManyToOne
+	@ManyToOne()
 	@JoinColumn(name="transporterId")
 	private Transporter transporter;
 	
-	@OneToMany(mappedBy="vehicle",cascade= javax.persistence.CascadeType.ALL,fetch = FetchType.LAZY)
+	@OneToMany(mappedBy="vehicle",fetch = FetchType.LAZY)
 	List<Deal>dealList = new ArrayList<Deal>();
 	// constructors
-	public Vehicle(String registrationNo) {
+	public Vehicle(String vehicleNo) {
 		super();
-		this.registrationNo = registrationNo;
+		this.registrationNo = vehicleNo;
 	}
 
 	@Override
@@ -77,27 +74,6 @@ public class Vehicle {
 		this.status = status;
 	}
 
-
-	public Vehicle(int vehicleId, String registrationNo, String chasisNo, String ownerName, String model,
-				String vehicleType, String insuranceProvider, Date insuranceValidity, Date fitnessValidity,
-				String fitnessCertficate, String insurancePaper, boolean status,
-				List<Deal> dealList) {
-			super();
-			this.vehicleId = vehicleId;
-			this.registrationNo = registrationNo;
-			this.chasisNo = chasisNo;
-			this.ownerName = ownerName;
-			this.model = model;
-			this.vehicleType = vehicleType;
-			this.insuranceProvider = insuranceProvider;
-			this.insuranceValidity = insuranceValidity;
-			this.fitnessValidity = fitnessValidity;
-			this.fitnessCertficate = fitnessCertficate;
-			this.insurancePaper = insurancePaper;
-			this.status = status;
-			this.dealList = dealList;
-		}
-
 	public Vehicle() {
 		super();
 	}
@@ -105,17 +81,8 @@ public class Vehicle {
 
 	/*
 	 * getters and setter methods
-	 * 
+	 *  
 	 */
-
-	public int getVehicleId() {
-		return vehicleId;
-	}
-
-	public void setVehicleId(int vehicleId) {
-		this.vehicleId = vehicleId;
-	}
-
 	public List<Deal> getDealList() {
 		return dealList;
 	}

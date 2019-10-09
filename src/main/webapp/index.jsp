@@ -6,5 +6,6 @@
 <a href="admin/login">Login Admin</a>
 <a href="register">Register</a>
 <a href="transporter/register">Register transporter</a>
+<a href="admin/adminhome">Admin</a>
 </body>
 </html>

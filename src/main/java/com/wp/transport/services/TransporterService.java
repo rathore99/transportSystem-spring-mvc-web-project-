@@ -17,4 +17,6 @@ public interface TransporterService {
 	public List<Transporter> show();
 	
 	public Transporter getTransporter(String email, String password);
+	
+	public Transporter getTransporterById(int id);
 }

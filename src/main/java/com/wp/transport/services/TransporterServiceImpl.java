@@ -30,8 +30,8 @@ public class TransporterServiceImpl implements  TransporterService {
 	}
 
 	public List<Transporter> show() {
-		// TODO Auto-generated method stub
-		return null;
+		return transporterDAO.getTransporterList();
+		
 	}
 
 	public Transporter getTransporter(String email, String password) {
@@ -41,6 +41,11 @@ public class TransporterServiceImpl implements  TransporterService {
 		}
 		return null;
 		
+	}
+
+	public Transporter getTransporterById(int id) {
+		
+		return transporterDAO.getTransporterByid(id);
 	}
 	
 	

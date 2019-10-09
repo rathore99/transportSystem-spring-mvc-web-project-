@@ -1,6 +1,9 @@
 package com.wp.transport.services;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.el.ArrayELResolver;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,6 +40,21 @@ public class VehicleServiceImpl implements VehicleService {
 		
 	}
 	
+	public List<String> getAllvehicle(int transporterId){
+		System.out.println("--------------------------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+		List<String> data = vehicleDAO.getAllRegNo(transporterId);
+		System.out.println(data.size());
+		
+		return data;
+	}
+
+	public List<Vehicle> show() {
+	
+		return vehicleDAO.getVehicleList();
+	}
+	public List<Vehicle>getUnapprovedVehicles(){
+		return vehicleDAO.getUnapprovedVehicles("status",false);
+	}
 	
 
 

@@ -8,16 +8,25 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 public class Deal {
-	@Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@Id @GeneratedValue(strategy = GenerationType.AUTO)
 	private int dealId;
 	private String source;
 	private String destination;
 	private int price;
 	private int distance;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@Temporal(TemporalType.DATE)
 	private Date availableDate;
+	@CreationTimestamp
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date postTime;
 	private boolean status; 
 	@ManyToOne

@@ -9,7 +9,6 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.wp.transport.entities.Customer;
 import com.wp.transport.entities.Transporter;
 @Repository
 public class TransporterDAOImplementation implements TransporterDAO {
@@ -19,6 +18,7 @@ public class TransporterDAOImplementation implements TransporterDAO {
 	
 	public boolean addTransporter(Transporter transporter) {
 		Session session = sessionFactory.openSession();
+		session.clear();
 		Transaction transaction = session.beginTransaction();
 		session.save(transporter);
 		transaction.commit();
@@ -38,8 +38,12 @@ public class TransporterDAOImplementation implements TransporterDAO {
 	}
 
 	public List<Transporter> getTransporterList() {
-		// TODO Auto-generated method stub
-		return null;
+		Session session = sessionFactory.openSession();
+		String hql = "FROM Transporter";
+		Query query = session.createQuery(hql);
+		List results = query.list();
+		session.close();
+		return results;
 	}
 
 	public void updateTransporter(Transporter transporter) {
@@ -60,6 +64,23 @@ public class TransporterDAOImplementation implements TransporterDAO {
 		List results = query.list();
 		session.close();
 		return results;
+	}
+
+	public Transporter getTransporterById(int id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Transporter getTransporterByid(int id) {
+		Session session =sessionFactory.openSession();
+		Transaction tx = session.beginTransaction();
+		Transporter transporter = session.get(Transporter.class,id);
+		tx.commit();
+		session.close();
+		return transporter;
+
+
+		
 	}
 
 

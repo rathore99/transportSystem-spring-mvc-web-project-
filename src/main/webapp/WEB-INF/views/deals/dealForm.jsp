@@ -10,28 +10,31 @@
 <title>Create Deal</title>
 </head>
 <body>
+<h4>${msg}</h4>
 <form:form action="createDeal" method="POST" modelAttribute="deal">
-		<form:select path="registrationNo" name="registrationNo">
-			<c:forEach var="vehicle" items="${vehicleList}">
-				<form:option value="${vehicle.vehicleId}" label="${vehicle.registrationNo}"></form:option>
+        <label>Vehicle </label><br>
+		<form:select name="registrationNo" path="">
+			<c:forEach var="registrationNo1" items="${vehicleList}">
+				<form:option value="${registrationNo1}" label="${registrationNo1}"></form:option>
 			</c:forEach>
-		<form:label path="source">Source city</form:label>	
-		<form:input path="source"/>
+			</form:select><br><br>
+		<form:label path="source">Source city</form:label>	<br>
+		<form:input path="source"/><br/><br/>
 		<form:errors path="source"></form:errors>
-		<form:label path="destination">destination city</form:label>	
-		<form:input path="destination"/>
+		<form:label path="destination">destination city</form:label><br>
+		<form:input path="destination"/><br/><br/>
 		<form:errors path="destination"></form:errors>	
-		<form:label path="distance">distance</form:label>	
-		<form:input path="distance"/>
+		<form:label path="distance">distance</form:label><br>	
+		<form:input path="distance"/><br/><br/>
 		<form:errors path="distance"></form:errors>	
-		<form:label path="price">price</form:label>	
-		<form:input path="price"/>
+		<form:label path="price">price</form:label>	<br>
+		<form:input path="price"/><br/><br/>
 		<form:errors path="price"></form:errors>	
-		<form:label path="availableDate">availableDate</form:label>	
-		<form:input path="availableDate" type="date"/>
+		<form:label path="availableDate">availableDate</form:label><br>	
+		<form:input path="availableDate" type="date"/><br/><br/>
 		<form:errors path="availableDate"></form:errors>
 			<input type="submit" value="Post Deal">
-		</form:select>
+		
 
 	</form:form>
 </body>

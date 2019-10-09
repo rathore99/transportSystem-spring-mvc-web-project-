@@ -14,7 +14,7 @@ import javax.persistence.OneToMany;
 @Entity
 public class Transporter {
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int transporterId;
 	private String firstName;
 	private String lastName;
@@ -31,10 +31,10 @@ public class Transporter {
 	private String gstPaper;
 	private boolean status = false;
 	
-	@OneToMany(mappedBy="transporter",cascade= javax.persistence.CascadeType.ALL,fetch = FetchType.LAZY)
+	@OneToMany(mappedBy="transporter",fetch = FetchType.LAZY)
 	List<Vehicle>vehicleList = new ArrayList<Vehicle>();
-	
-	@OneToMany(mappedBy="transporter",cascade= javax.persistence.CascadeType.ALL,fetch = FetchType.LAZY)
+
+	@OneToMany(mappedBy="transporter",fetch = FetchType.LAZY)
 	List<Deal>dealList = new ArrayList<Deal>();
 
 	
@@ -104,6 +104,14 @@ public class Transporter {
 	
 	public String getFirstName() {
 		return firstName;
+	}
+
+	public List<Deal> getDealList() {
+		return dealList;
+	}
+
+	public void setDealList(List<Deal> dealList) {
+		this.dealList = dealList;
 	}
 
 	public List<Vehicle> getVehicleList() {
@@ -214,4 +222,12 @@ public class Transporter {
 		this.gstPaper = gstPaper;
 	}
 
+	@Override
+	public String toString() {
+		return "Transporter [transporterId=" + transporterId + ", firstName=" + firstName + ", lastName=" + lastName
+				+ ", email=" + email + ", mobileNo=" + mobileNo + ", address=" + address + "]";
+	}
+
+	
+	
 }

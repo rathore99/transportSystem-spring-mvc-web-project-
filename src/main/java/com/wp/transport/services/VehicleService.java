@@ -16,4 +16,10 @@ public interface VehicleService {
 
 	public List<Vehicle> show(int transporterId);
 
+	public List<Vehicle> show();
+
+	public List<String> getAllvehicle(int transporterId);
+
+	public List<Vehicle> getUnapprovedVehicles();
+
 }

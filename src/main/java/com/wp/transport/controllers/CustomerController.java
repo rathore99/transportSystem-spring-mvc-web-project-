@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +42,7 @@ public class CustomerController {
 	}
 	*/
 	@RequestMapping(value="saveCustomer", method=RequestMethod.POST)
-	public ModelAndView saveUser(@Valid @ModelAttribute("customer") Customer customer,BindingResult result, @RequestParam("profileImgs") MultipartFile imgFile) {
+	public ModelAndView saveUser(@Valid @ModelAttribute("customer") Customer customer,BindingResult result, @RequestParam("profileImgs") MultipartFile imgFile,HttpSession session) {
 
 		if(result.hasErrors()) {
 			ModelAndView modelAndVew = new ModelAndView("customerRegistrationForm");
@@ -80,6 +81,7 @@ public class CustomerController {
             e.printStackTrace();
         }
 		customerServices.addCustomer(customer);
+		session.setAttribute("customer", customer);
 		System.out.println(customer);
 		ModelAndView modelAndVew = new ModelAndView("customerInfo");
 		return modelAndVew;

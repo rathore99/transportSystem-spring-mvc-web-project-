@@ -87,9 +87,9 @@ public class TransporterController {
 
 	@RequestMapping(value = "saveVehicle", method = RequestMethod.POST)
 	public ModelAndView saveVehicle(@Valid @ModelAttribute("vehicle") Vehicle vehicle,
-			@ModelAttribute("transporter") Transporter transporter, BindingResult result,
+			 BindingResult result,
 			@RequestParam("insurancePapers") MultipartFile insurancePaper,
-			@RequestParam("fitnesscerts") MultipartFile fitnessCertficate) {
+			@RequestParam("fitnesscerts") MultipartFile fitnessCertficate,HttpSession session) {
 
 		if (result.hasErrors()) {
 			ModelAndView modelAndVew = new ModelAndView("transporter/VehicleForm");
@@ -118,7 +118,10 @@ public class TransporterController {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		vehicle.setTransporter(transporter);
+		int id = (Integer) session.getAttribute("transporterId");
+		
+		System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"+id);
+		vehicle.setTransporter(new Transporter(id));
 		vehicleService.addVehicle(vehicle);
 		System.out.println(vehicle);
 		ModelAndView modelAndVew = new ModelAndView("transporter/successMsg");
@@ -143,8 +146,13 @@ public class TransporterController {
 	}
 
 	@RequestMapping(value = "updateProfile")
-	public ModelAndView updateTransporter(@ModelAttribute("transporter") Transporter transporter) {
-
+	public ModelAndView updateTransporter(HttpSession session ) {
+      
+		int id = (Integer) session.getAttribute("transporterId");
+		System.out.println(id);
+		
+		Transporter transporter =  transporterService.getTransporterById(id);
+		System.out.println(transporter);
 		if (transporter != null) {
 			ModelAndView modelAndView = new ModelAndView("transporter/updateTransporter");
 			modelAndView.addObject("transporter", transporter);
@@ -153,7 +161,7 @@ public class TransporterController {
 		ModelAndView modelAndView = new ModelAndView("transporter/login");
 		modelAndView.addObject("error", "Invalid Credentials");
 		return modelAndView;
-	}
+	}  
 
 	@RequestMapping(value = "updatevehicle")
 	public ModelAndView updateVehicle(@RequestParam("registrationNo") String registrationNo) {
@@ -172,6 +180,9 @@ public class TransporterController {
 	@RequestMapping(value = "updateTransporter", method = RequestMethod.POST)
 	public ModelAndView updateRecord(@ModelAttribute("transporter") Transporter transporter) {
 
+		System.out.println("!!!!update@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+		System.out.println(transporter);
+		
 		transporterService.updateTransporter(transporter);
 		ModelAndView modelAndView = new ModelAndView("transporter/transporterHome");
 		modelAndView.addObject("msg", "record updated");

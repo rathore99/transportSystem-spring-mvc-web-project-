@@ -11,6 +11,7 @@
 </head>
 <body>
 <form:form action="updateTransporter" method="POST" modelAttribute="transporter">
+<form:hidden path="transporterId"/>
 <form:label path="firstName">First Name</form:label><br/>
 <form:input  path="firstName" value="${transporter.firstName}" /><br/><br/>
 <form:errors path="firstName"></form:errors>

@@ -16,5 +16,9 @@ public interface TransporterDAO {
 	public void updateTransporter(Transporter transporter);
 	
 	public List<Transporter> getTransporter(String email, String password);
+	
+	public Transporter getTransporterById(int id);
+
+	public Transporter getTransporterByid(int id);
 
 }

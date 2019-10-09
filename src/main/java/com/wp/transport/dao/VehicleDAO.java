@@ -9,10 +9,14 @@ public interface VehicleDAO {
 
 	public Vehicle deleteVehicle(Vehicle vehicle);
 
-	public Vehicle searchVehicle(String registrationNo );
+	public Vehicle searchVehicle(String registrationNo);
 
 	public List<Vehicle> getVehicleList(int transporterId);
 
+	public List<Vehicle> getVehicleList();
 	public void updateVehicle(Vehicle vehicle);
+
+	public List<String> getAllRegNo(int transportId);
+	public List<Vehicle>getUnapprovedVehicles(String propertyName, boolean value);
 
 }

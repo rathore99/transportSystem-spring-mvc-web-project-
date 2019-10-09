@@ -1,5 +1,7 @@
 package com.wp.transport.controllers;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,10 +32,11 @@ public class LoginController {
 	}
 	
 	@RequestMapping(value="verify", method = RequestMethod.POST)
-	public ModelAndView verifyUser(@RequestParam("email") String email,@RequestParam("password") String password) {
+	public ModelAndView verifyUser(@RequestParam("email") String email,@RequestParam("password") String password,HttpSession session) {
 		
 		if(customerServices.getCustomer(email, password)) {
 		ModelAndView modelAndView = new ModelAndView("homePage");
+		session.setAttribute("customer", email);
 		return modelAndView;
 		}
 		ModelAndView modelAndView = new ModelAndView("login");
