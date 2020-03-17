@@ -19,9 +19,9 @@ public class BasicController {
 		ModelAndView modelAndView = new ModelAndView("index1");
 		return modelAndView;
 	}
-	@RequestMapping(value= {"login"}, method = RequestMethod.GET)
+	@RequestMapping(value= {"customer/login"}, method = RequestMethod.GET)
 	public ModelAndView showLoginForm() {
-		ModelAndView modelAndView = new ModelAndView("login");
+		ModelAndView modelAndView = new ModelAndView("customer/login");
 		return modelAndView;
 	}
 	@RequestMapping(value= {"transporter/login"}, method = RequestMethod.GET)
@@ -29,9 +29,9 @@ public class BasicController {
 		ModelAndView modelAndView = new ModelAndView("transporter/login");
 		return modelAndView;
 	}
-	@RequestMapping(value="register", method = RequestMethod.GET)
+	@RequestMapping(value="customer/register", method = RequestMethod.GET)
 	public ModelAndView showRegistrationForm() {
-		ModelAndView modelAndView = new ModelAndView("customerRegistrationForm");
+		ModelAndView modelAndView = new ModelAndView("customer/customerRegistrationForm");
 		modelAndView.addObject("customer",new Customer());
 		return modelAndView;
 	}

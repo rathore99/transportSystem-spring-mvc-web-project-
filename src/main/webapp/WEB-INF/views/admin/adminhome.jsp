@@ -1,134 +1,71 @@
-<%@page isELIgnored="false" %>
-<!DOCTYPE html>
+
+<%@page isELIgnored="false"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+
 <html>
-<head>
-<style>
-ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  background-color: #333;
-}
-
-li {
-  float: left;
-}
-
-li a, .dropbtn {
-  display: inline-block;
-  color: white;
-  text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
-}
-
-li a:hover, .dropdown:hover .dropbtn {
-  background-color: red;
-}
-
-li.dropdown {
-  display: inline-block;
-}
-
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #f9f9f9;
-  min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
-}
-
-.dropdown-content a {
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-  text-align: left;
-}
-
-.dropdown-content a:hover {background-color: #f1f1f1;}
-
-.dropdown:hover .dropdown-content {
-  display: block;
-}
-</style>
-</head>
 <body>
-
-<ul>
-  <li><a href="viewalltransporteradmin">view All Transporteradmin</a></li>
-  <li><a href="showVehicles">All Vehical</a></li>
- <li><a href="viewallDealadmin">All Deal</a></li>
-<!--  <li><a href="removetransporter">remove Transporter</a></li> -->
- <li><a href="approvetransporterrequest">approvetransporterrequest</a></li>
- <li><a href="approveVehicleRequest">approveVehicleRequest</a></li>
- <li><a href="viewAllQueryAndResponse">QueryAndResponse</a></li>
- <li><a href="logout">logout</a></li>
- 
-</ul>
-
-<hr>
-<h2>New Transporter Account Request</h2>
-<c:forEach var="vehicle" items="${vehicleList}">
-		<p>RegistrationNo: ${vehicle.registrationNo} chasisNo:
-			${vehicle.chasisNo}</p>
-		<p>ownerName: ${vehicle.ownerName} model:${vehicle.model}
-			vehicleType:${vehicle.vehicleType}</p>
-		<p>insuranceProvider: ${vehicle.insuranceProvider}
-			insuranceValidity:${vehicle.insuranceValidity}</p>
-		<p>fitnessValidity: ${vehicle.fitnessValidity}</p>
-		<a href="updatevehicle?registrationNo=${vehicle.registrationNo}">approve</a>
-		<a href="updatevehicle?registrationNo=${vehicle.registrationNo}">unregister</a>
-		<hr>
+<jsp:include page="navbar.jsp"></jsp:include>
+	<hr>
+	<h2>${heading}</h2>
+	<table>
+		<tr>
+			<th>Name</th>
+			<th>email</th>
+			<th>Mobile No</th>
+			<th>Gst No</th>
+			<th>Pan card No</th>
+			<th>Gst doc</th>
+			<th>Pan Card</th>
+			<th>Action</th>
+		</tr>
+	
+	<c:forEach var="transporter" items="${transporterList}">
+		<tr>
+			<td>${transporter.firstName}</td>
+			<td>${transporter.email}</td>
+			<td>${transporter.mobileNo}</td>
+			<td>${transporter.gstNo}</td>
+			<td>${transporter.panCardNo}</td>
+			<td>docs</td>
+			<td>docs</td>
+			<td><a href="viewTransporterDetails?transporterId=${transporter.transporterId}">View</a>
+			<a href="acceptRequest?transporterId=${transporter.transporterId}">Accept</a><a href="declineRequest?transporterId=${transporter.transporterId}"></a>Decline</td>
+		</tr>
 	</c:forEach>
-<hr>
-<h2>New vehicle Request</h2>
-<c:forEach var="vehicle" items="${vehicleList}">
-		<p>RegistrationNo: ${vehicle.registrationNo} chasisNo:
-			${vehicle.chasisNo}</p>
-		<p>ownerName: ${vehicle.ownerName} model:${vehicle.model}
-			vehicleType:${vehicle.vehicleType}</p>
-		<p>insuranceProvider: ${vehicle.insuranceProvider}
-			insuranceValidity:${vehicle.insuranceValidity}</p>
-		<p>fitnessValidity: ${vehicle.fitnessValidity}</p>
-		<a href="updatevehicle?registrationNo=${vehicle.registrationNo}">approve</a>
-		<a href="updatevehicle?registrationNo=${vehicle.registrationNo}">unregister</a>
-		<hr>
+	</table>
+	<hr>
+	
+	<h2>${headingv}</h2>
+		<table>
+		<tr>
+			<th>RegistrationNo </th>
+			<th>chasisNo</th>
+			<th>ownerName</th>
+			<th>model</th>
+			<th>vehicleType</th>
+			<th>insuranceProvider</th>
+			<th>insuranceValidity</th>
+			<th>fitnessValidity</th>
+			<th>Action</th>
+		</tr>
+	
+	<c:forEach var="vehicle" items="${vehicleList}">
+		<tr>
+			<td>${vehicle.registrationNo}</td>
+			<td>${vehicle.chasisNo}</td>
+			<td>${vehicle.ownerName}</td>
+			<td>${vehicle.model}</td>
+			<td>${vehicle.vehicleType}</td>
+			<td>${vehicle.insuranceProvider}</td>
+			<td>${vehicle.insuranceValidity}</td>
+			<td>${vehicle.fitnessValidity}</td>
+			<td><a href="viewVehicleDetails?vid=${vehicle.registrationNo}">View</a>
+			<a href="approveVehicle?vid=${vehicle.registrationNo}">Approved</a><a href="declineVehicleRequest?vid=${vehicle.registrationNo}">Decline</a></td>
+		</tr>
 	</c:forEach>
-</body>
+	</table>
+	</body>
 </html>
 
 
-
-
-
-<%-- <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="ISO-8859-1">
-<title>Insert title here</title>
-</head>
-<body>
-<h2>Transportation</h2>
-All Transporter  : <a href="viewalltransporteradmin">All Transporter  </a><br>
-
-All Vehicle  : <a href="viewallvehicaladmin">All Vehicle    </a><br>
-
-All Deal  : <a href="viewallDealadmin">All Deal  </a><br>
-
-<!-- Delete Transporter  : <a href="removetransporter">Update Vehicle</a><br> -->
-Approve Transporter Request  : <a href="approvetransporterrequest">Approve_Transporter_Request  </a><br>
-
-Approve Vehicle Request  : <a href="approveVehicleRequest">Approve_Vehicle_Request  </a><br>
-
-Remove Deal  : <a href="removeDealByAdmin">Remove Deal  </a><br>
-
-
-QueryDetails  : <a href="viewAllQueryAndResponse">QueryCustomerTransporterResponse</a><br>
-
-</body>
-</html --%>

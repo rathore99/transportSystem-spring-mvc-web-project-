@@ -19,8 +19,7 @@ public class VehicleServiceImpl implements VehicleService {
 	}
 
 	public Vehicle deleteVehicle(Vehicle vehicle) {
-		// TODO Auto-generated method stub
-		return null;
+		return vehicleDAO.deleteVehicle(vehicle);
 	}
 
 	public void updateVehicle(Vehicle vehicle) {
@@ -52,8 +51,12 @@ public class VehicleServiceImpl implements VehicleService {
 	
 		return vehicleDAO.getVehicleList();
 	}
-	public List<Vehicle>getUnapprovedVehicles(){
-		return vehicleDAO.getUnapprovedVehicles("status",false);
+	public List<Vehicle>getUnapprovedVehicles(boolean status){
+		return vehicleDAO.getUnapprovedVehicles(status);
+	}
+
+	public Vehicle getVehicleById(String id) {
+		return vehicleDAO.searchVehicle(id);
 	}
 	
 

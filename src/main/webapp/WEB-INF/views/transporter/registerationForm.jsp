@@ -29,9 +29,6 @@
 <form:label path="address">address</form:label><br/>
 <form:input path="address"  /><br/><br/>
 <form:errors path="address"></form:errors>
-<form:label path="noOfVehicles">noOfVehicles</form:label><br/>
-<form:input path="noOfVehicles"  /><br/><br/>
-<form:errors path="noOfVehicles"></form:errors>
 <form:label path="panCardNo">PANCardNo</form:label><br/>
 <form:input path="panCardNo"  /><br/><br/>
 <form:errors path="panCardNo"></form:errors>

@@ -17,6 +17,6 @@ public interface VehicleDAO {
 	public void updateVehicle(Vehicle vehicle);
 
 	public List<String> getAllRegNo(int transportId);
-	public List<Vehicle>getUnapprovedVehicles(String propertyName, boolean value);
+	public List<Vehicle>getUnapprovedVehicles( boolean value);
 
 }

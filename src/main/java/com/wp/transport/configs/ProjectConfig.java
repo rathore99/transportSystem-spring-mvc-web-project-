@@ -6,12 +6,12 @@ import java.util.Properties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
-import org.springframework.web.servlet.view.UrlBasedViewResolver;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 
@@ -29,7 +29,20 @@ public class ProjectConfig {
 		vr.setOrder(1);
 		return vr;
 	}
-
+	@Bean
+	public JavaMailSenderImpl mailSender(){
+		JavaMailSenderImpl jms=new JavaMailSenderImpl();
+		jms.setHost("smtp.gmail.com");
+		jms.setPort(587);
+		jms.setUsername("info.transportportal@gmail.com");
+		jms.setPassword("rahul@wp");
+		Properties properties=new Properties();
+		properties.setProperty("mail.transport.protocol", "smtp");
+		properties.setProperty("mail.smtp.auth", "true");
+		properties.setProperty("mail.smtp.starttls.enable", "true");
+		jms.setJavaMailProperties(properties);
+		return jms;
+	}
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
     }

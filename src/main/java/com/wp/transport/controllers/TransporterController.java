@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -14,7 +15,6 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -22,10 +22,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.wp.transport.dao.DealDAO;
+import com.wp.transport.entities.Deal;
 import com.wp.transport.entities.Transporter;
 import com.wp.transport.entities.Vehicle;
 import com.wp.transport.services.TransporterService;
@@ -40,6 +41,9 @@ public class TransporterController {
 	TransporterService transporterService;
 	@Autowired
 	VehicleService vehicleService;
+	
+	@Autowired
+	DealDAO dealDAO;
 	private static final String UPLOADED_FOLDER = "D:\\images\\";
 
 	@InitBinder
@@ -79,12 +83,24 @@ public class TransporterController {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+        try {
+			byte [] hash = Util.getSHA(transporter.getPassword());
+			String hshpassword = Util.toHexString(hash);
+			transporter.setPassword(hshpassword);
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		transporterService.addTransporter(transporter);
 		System.out.println(transporter);
-		ModelAndView modelAndVew = new ModelAndView("transporter/successMsg");
+		ModelAndView modelAndVew = new ModelAndView("redirect:successMsg");
 		return modelAndVew;
 	}
 
+	@RequestMapping(value = "successMsg")
+	public String showMsg() {
+		return "transporter/successMsg";
+	}
 	@RequestMapping(value = "saveVehicle", method = RequestMethod.POST)
 	public ModelAndView saveVehicle(@Valid @ModelAttribute("vehicle") Vehicle vehicle,
 			 BindingResult result,
@@ -132,7 +148,15 @@ public class TransporterController {
 	@RequestMapping(value = "verifytransporter", method = RequestMethod.POST)
 	public ModelAndView verifyTransporter(@RequestParam("email") String email,
 			@RequestParam("password") String password, HttpSession session) {
-		Transporter transporter = transporterService.getTransporter(email, password);
+		String hashPassword=null;
+		try {
+			byte [] hash = Util.getSHA(password);
+			 hashPassword = Util.toHexString(hash);
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Transporter transporter = transporterService.getTransporter(email, hashPassword);
 		if (transporter != null) {
 			ModelAndView modelAndView = new ModelAndView("transporter/transporterHome");
 			modelAndView.addObject("transporter", transporter);
@@ -222,10 +246,16 @@ public class TransporterController {
 	}
 
 	@RequestMapping("showDeals")
-	public String fetchDeales() {
+	public ModelAndView fetchDeales() {
 		// select * from deals where transporter id= tid;
 		// fetch all deals associated with transporter
-		return "transporter/showDeals";
+		List<Deal> data = dealDAO.getDealList();
+		ModelAndView modelAndView = new ModelAndView("transporter/showDeals");
+		modelAndView.addObject("dealList", data);
+		modelAndView.addObject("deal", new Deal());
+
+		return modelAndView;
+		
 	}
 
 	@RequestMapping("index")

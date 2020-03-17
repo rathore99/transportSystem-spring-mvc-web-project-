@@ -15,8 +15,10 @@ public interface TransporterService {
 	public Transporter searchTransporter(String email);
 
 	public List<Transporter> show();
-	
+
+	public List<Transporter> getTransporterByStatus(boolean status);
+
 	public Transporter getTransporter(String email, String password);
-	
+
 	public Transporter getTransporterById(int id);
 }

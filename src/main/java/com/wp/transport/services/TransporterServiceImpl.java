@@ -16,8 +16,7 @@ public class TransporterServiceImpl implements  TransporterService {
 	}
 
 	public Transporter deleteTransporter(Transporter transporter) {
-		// TODO Auto-generated method stub
-		return null;
+	 return transporterDAO.deleteTransporter(transporter);
 	}
 
 	public void updateTransporter(Transporter transporter) {
@@ -43,9 +42,19 @@ public class TransporterServiceImpl implements  TransporterService {
 		
 	}
 
+	
+	public List<Transporter> getTransporterByStatus(boolean status) {
+		List<Transporter> results =transporterDAO.getListByStatus(status);
+		/*System.out.println("Ser-------------------------"+results.size());
+		for(Transporter t: results) {
+			System.out.println(t);
+		}*/
+		return results;
+	}
+
 	public Transporter getTransporterById(int id) {
 		
-		return transporterDAO.getTransporterByid(id);
+		return  transporterDAO.getTransporterById(id);
 	}
 	
 	

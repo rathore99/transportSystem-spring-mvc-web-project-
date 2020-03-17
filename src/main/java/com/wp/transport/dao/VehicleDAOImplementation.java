@@ -29,8 +29,12 @@ public class VehicleDAOImplementation implements VehicleDAO{
 	}
 
 	public Vehicle deleteVehicle(Vehicle vehicle) {
-		// TODO Auto-generated method stub
-		return null;
+		Session session = sessionFactory.openSession();
+		Transaction tx = session.beginTransaction();
+		session.delete( vehicle);
+		tx.commit();
+		session.close();
+		return  vehicle;
 	}
 
 	public Vehicle searchVehicle(String registrationNo) {
@@ -91,16 +95,16 @@ public class VehicleDAOImplementation implements VehicleDAO{
 
 	}
 
-	public List<Vehicle> getUnapprovedVehicles(String propertyName, boolean value) {
+	public List<Vehicle> getUnapprovedVehicles( boolean value) {
 		Session session =sessionFactory.openSession();
 		Transaction tx = session.beginTransaction();	
 		/*Criteria cr = session.createCriteria(Vehicle.class);
 		Criterion crt = Restrictions.eq("status", false);
 		cr.add(crt);
 		*/
-		String hql = "FROM Vehicle WHERE Status=false";
+		String hql = "FROM Vehicle WHERE Status=:statusParam";
 		Query query = session.createQuery(hql);
-		//query.setParameter("transportIdparam", transporterId);*/
+		query.setParameter("statusParam",value);
 		List results =query.list();
 		session.close();
 		return results;

@@ -5,6 +5,7 @@ import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -38,8 +39,14 @@ public class DealDAOImpl implements  DealDAO{
 	}
 
 	public List<Deal> getDealList() {
-		// TODO Auto-generated method stub
-		return null;
+		Session session =sessionFactory.openSession();
+		Transaction tx = session.beginTransaction();
+		String hql = "FROM Deal ";
+		Query query = session.createQuery(hql);
+		//query.setParameter("transportIdparam", transporterId);
+		List results = query.list();
+		session.close();
+		return results;
 	}
 
 	public void updateDeal(Deal Deal) {

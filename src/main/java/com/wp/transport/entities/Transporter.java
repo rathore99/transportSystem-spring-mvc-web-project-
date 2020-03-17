@@ -24,7 +24,6 @@ public class Transporter {
 	private String mobileNo;
 	private String password;
 	private String address;
-	private int noOfVehicles;
 	private String gstNo;
 	private String panCardNo;
 	private String panCard;
@@ -48,7 +47,7 @@ public class Transporter {
 	}
 	
 	public Transporter(int transporterId, String firstName, String lastName, String email, String mobileNo,
-			String password, String address, int noOfVehicles, String gstNo, String panCardNo, String panCard,
+			String password, String address, String gstNo, String panCardNo, String panCard,
 			String gstPaper, boolean status, List<Vehicle> vehicleList) {
 		super();
 		this.transporterId = transporterId;
@@ -58,7 +57,6 @@ public class Transporter {
 		this.mobileNo = mobileNo;
 		this.password = password;
 		this.address = address;
-		this.noOfVehicles = noOfVehicles;
 		this.gstNo = gstNo;
 		this.panCardNo = panCardNo;
 		this.panCard = panCard;
@@ -70,7 +68,7 @@ public class Transporter {
 	
 
 	public Transporter(int transporterId, String firstName, String lastName, String email, String mobileNo,
-			String password, String address, int noOfVehicles, String gstNo, String panCardNo, String panCard,
+			String password, String address, String gstNo, String panCardNo, String panCard,
 			String gstPaper, boolean status, List<Vehicle> vehicleList, List<Deal> dealList) {
 		super();
 		this.transporterId = transporterId;
@@ -80,7 +78,7 @@ public class Transporter {
 		this.mobileNo = mobileNo;
 		this.password = password;
 		this.address = address;
-		this.noOfVehicles = noOfVehicles;
+	
 		this.gstNo = gstNo;
 		this.panCardNo = panCardNo;
 		this.panCard = panCard;
@@ -182,14 +180,7 @@ public class Transporter {
 		this.address = address;
 	}
 
-	public int getNoOfVehicles() {
-		return noOfVehicles;
-	}
-
-	public void setNoOfVehicles(int noOfVehicles) {
-		this.noOfVehicles = noOfVehicles;
-	}
-
+	
 	public String getGstNo() {
 		return gstNo;
 	}

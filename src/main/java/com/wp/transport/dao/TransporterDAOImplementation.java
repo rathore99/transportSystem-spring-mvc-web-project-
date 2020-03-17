@@ -28,8 +28,12 @@ public class TransporterDAOImplementation implements TransporterDAO {
 	}
 
 	public Transporter deleteTransporter(Transporter transporter) {
-		// TODO Auto-generated method stub
-		return null;
+		Session session = sessionFactory.openSession();
+		Transaction tx = session.beginTransaction();
+		session.delete(transporter);
+		tx.commit();
+		session.close();
+		return transporter;
 	}
 
 	public Transporter searchTransporter(String email) {
@@ -67,11 +71,6 @@ public class TransporterDAOImplementation implements TransporterDAO {
 	}
 
 	public Transporter getTransporterById(int id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public Transporter getTransporterByid(int id) {
 		Session session =sessionFactory.openSession();
 		Transaction tx = session.beginTransaction();
 		Transporter transporter = session.get(Transporter.class,id);
@@ -81,6 +80,16 @@ public class TransporterDAOImplementation implements TransporterDAO {
 
 
 		
+	}
+
+	public List<Transporter> getListByStatus(boolean status) {
+		Session session = sessionFactory.openSession();
+		String hql = "FROM Transporter t WHERE t.status=:statusParam";
+		Query query = session.createQuery(hql);
+		query.setParameter("statusParam", status);
+		List results = query.list();
+		session.close();
+		return results;
 	}
 
 

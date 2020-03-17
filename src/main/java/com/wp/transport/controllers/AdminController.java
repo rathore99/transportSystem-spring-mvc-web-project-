@@ -1,58 +1,219 @@
 package com.wp.transport.controllers;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.List;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.wp.transport.entities.Deal;
 import com.wp.transport.entities.Transporter;
 import com.wp.transport.entities.Vehicle;
 import com.wp.transport.services.TransporterService;
 import com.wp.transport.services.VehicleService;
+import com.wp.transport.util.Util;
 
 @Controller
+@RequestMapping("admin/")
 public class AdminController {
 	@Autowired
-	TransporterService transporterService ;
+	TransporterService transporterService;
 	@Autowired
-	VehicleService vehicleService; 
+	VehicleService vehicleService;
 
-	
-	/****************************sshow admin home**************************/
-	@RequestMapping("admin/adminhome")
-	public ModelAndView adminHome()
-	{
-		
-		ModelAndView mv=new ModelAndView("admin/adminhome");
-		
-	List<Vehicle>data=	vehicleService.getUnapprovedVehicles();
-	mv.addObject("vehicleList", data);
+	@Autowired
+	JavaMailSender mailSender;
+
+	/**************************** sshow admin home **************************/
+	@RequestMapping("adminhome")
+	public ModelAndView adminHome() {
+
+		ModelAndView mv = new ModelAndView("admin/adminhome");
+		List<Transporter> transporterData = transporterService.getTransporterByStatus(false);
+		List<Vehicle> data = vehicleService.getUnapprovedVehicles(false);
+		mv.addObject("heading", "Unapproved transporter list");
+		mv.addObject("vehicleList", data);
+		mv.addObject("headingv", "Unapproved vehicle list");
+		mv.addObject("transporterList", transporterData);
+		return mv;
+	}
+	@RequestMapping("approveVehicleRequest")
+	public ModelAndView approvedVehicles() {
+
+		ModelAndView mv = new ModelAndView("admin/adminhome");
+		List<Transporter> transporterData = transporterService.getTransporterByStatus(true);
+		List<Vehicle> data = vehicleService.getUnapprovedVehicles(true);
+		mv.addObject("vehicleList", data);
+		mv.addObject("heading", "approved transporter list");
+		mv.addObject("headingv", "Unapproved vehicle list");
+		mv.addObject("transporterList", transporterData);
+		return mv;
+	}
+
+
+	/************************approoved transporters********************************/
+	@RequestMapping("approvetransporterrequest")
+	public ModelAndView approvedTransporters() {
+
+		ModelAndView mv = new ModelAndView("admin/adminhome");
+		List<Transporter> transporterData = transporterService.getTransporterByStatus(true);
+		List<Vehicle> data = vehicleService.getUnapprovedVehicles(false);
+		mv.addObject("vehicleList", data);
+		mv.addObject("heading", "approved transporter list");
+		mv.addObject("headingv", "Unapproved vehicle list");
+		mv.addObject("transporterList", transporterData);
 		return mv;
 	}
 	
-	/***********************show all transporters************************************/
+
+
+	/****************************
+	 * sing detail page
+	 *********************************/
+	@RequestMapping("viewTransporterDetails")
+	public ModelAndView showTransporter(@ModelAttribute("transporterId") int transporterId) {
+		ModelAndView mv = new ModelAndView("admin/showTransporter");
+		Transporter transporter = transporterService.getTransporterById(transporterId);
+		mv.addObject("transporter", transporter);
+		return mv;
+
+	}
+	
+	/**************************** Request accepted ****************************/
+
+	@RequestMapping("acceptRequest")
+	public ModelAndView updateStatus(@ModelAttribute("transporterId") int transporterId) {
+		ModelAndView mv = new ModelAndView("redirect:adminhome");
+		Transporter transporter = transporterService.getTransporterById(transporterId);
+		transporter.setStatus(true);
+		Util util = new Util();
+		System.out.println(transporter.getEmail() + "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+
+		SimpleMailMessage mailMessage = new SimpleMailMessage();
+		mailMessage.setTo(transporter.getEmail());
+		mailMessage.setSubject("request accepted ");
+		mailMessage.setText("your account veriied.... please login  at www.wp.transport.com");
+		try {
+			mailSender.send(mailMessage);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		// util.sendMail(transporter.getEmail(), "Account verified", "your account
+		// veriied.... please login");
+		transporterService.updateTransporter(transporter);
+		mv.addObject("transporter", transporter);
+		return mv;
+
+	}
+
+	/**************************** Request Decline ****************************/
+
+	@RequestMapping("declineRequest")
+	public ModelAndView deleteAccount(@ModelAttribute("transporterId") int transporterId) {
+		ModelAndView mv = new ModelAndView("redirect:adminhome");
+		Transporter transporter = transporterService.getTransporterById(transporterId);
+		Util util = new Util();
+		System.out.println(transporter.getEmail() + "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+		SimpleMailMessage mailMessage = new SimpleMailMessage();
+		mailMessage.setTo(transporter.getEmail());
+		mailMessage.setSubject("account request decline");
+		mailMessage.setText("your request is not approved by admin. Please do register with proper documents");
+		try {
+			mailSender.send(mailMessage);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		// util.sendMail(transporter.getEmail(), "Account verified", "your account
+		// veriied.... plaease login");
+		transporterService.deleteTransporter(transporter);
+		mv.addObject("msg", "deleted successfully");
+		return mv;
+
+	}
+
+	/******************************* vehicle detail *******************************/
+	@RequestMapping("viewVehicleDetails")
+	public ModelAndView showVehicles(@ModelAttribute("vid") String vid) {
+		ModelAndView mv = new ModelAndView("admin/showVehicle");
+		Vehicle vehicle = vehicleService.getVehicleById(vid);
+		mv.addObject("vehicle", vehicle);
+		return mv;
+
+	}
+
+	/********************* vehicle approved *************************/
+	@RequestMapping("approveVehicle")
+	public ModelAndView updateVehicleStatus(@ModelAttribute("vid") String vid) {
+		ModelAndView mv = new ModelAndView("redirect:adminhome");
+		Vehicle vehicle = vehicleService.getVehicleById(vid);
+		vehicle.setStatus(true);
+		Util util = new Util();
+
+		int tid = vehicle.getTransporter().getTransporterId();
+		Transporter transporter = transporterService.getTransporterById(tid);
+		System.out.println(transporter.getEmail() + "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+		SimpleMailMessage mailMessage = new SimpleMailMessage();
+		mailMessage.setTo(transporter.getEmail());
+		mailMessage.setSubject("request accepted ");
+		mailMessage.setText("your vehicle dos veriied. Now you can post deals.please login  at www.wp.transport.com");
+		try {
+			mailSender.send(mailMessage);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		// util.sendMail(transporter.getEmail(), "Account verified", "your account
+		// veriied.... please login");
+		vehicleService.updateVehicle(vehicle);
+		mv.addObject("vehicle", vehicle);
+		return mv;
+
+	}
+
+
+	/******************* vehicle not approved **********************/
+
+	@RequestMapping("declineVehicleRequest")
+	public ModelAndView deleteVehicle(@ModelAttribute("vid") String vid) {
+		ModelAndView mv = new ModelAndView("redirect:adminhome");
+		Vehicle vehicle = vehicleService.getVehicleById(vid);
+		int tid = vehicle.getTransporter().getTransporterId();
+		Transporter transporter = transporterService.getTransporterById(tid);
+		Util util = new Util();
+		System.out.println(transporter.getEmail() + "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+		SimpleMailMessage mailMessage = new SimpleMailMessage();
+		mailMessage.setTo(transporter.getEmail());
+		mailMessage.setSubject("vehicle not approved");
+		mailMessage.setText("your vehicle request is not approved by admin. Please do register with proper documents");
+		try {
+			mailSender.send(mailMessage);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		// util.sendMail(transporter.getEmail(), "Account verified", "your account
+		// veriied.... plaease login");
+		vehicleService.deleteVehicle(vehicle);
+		mv.addObject("msg", "deleted successfully");
+		return mv;
+
+	}
+
+	/***********************
+	 * show all transporters
+	 ************************************/
 	@RequestMapping("viewalltransporteradmin")
-	public ModelAndView viewAllTransporter()
-	{
-		//List<Transporter> transporter=transporterService.showAllTransporterService();
-		ModelAndView mv=new ModelAndView("showalltransportertoadmin");
-		//mv.addObject("transporter", transporter);
-		
+	public ModelAndView viewAllTransporter() {
+		// List<Transporter> transporter=transporterService.showAllTransporterService();
+		ModelAndView mv = new ModelAndView("showalltransportertoadmin");
+		// mv.addObject("transporter", transporter);
+
 		return mv;
 	}
-	@RequestMapping("admin/showVehicles")
+
+	@RequestMapping("showVehicles")
 	public ModelAndView fetchVehicles() {
 
 		List<Vehicle> data = vehicleService.show();
@@ -63,87 +224,5 @@ public class AdminController {
 		return modelAndView;
 	}
 
-	/*
-	@RequestMapping("viewallDealadmin")
-	public ModelAndView viewAllDeal()
-	{
-		List<Deal> deal=transporterService.showAllDealToService();
-		ModelAndView mv=new ModelAndView("AdminViewAllDeal");
-		mv.addObject("deal", deal);
-		
-		return mv;
-	}
-	
-	
-	@RequestMapping("approvetransporterrequest")
-	public ModelAndView seeApproveTransporterRequest()
-	{
-		List<Transporter> transporter=transporterService.showAllTransporterNotApprovedService();
-		
-		ModelAndView mv=new ModelAndView("approvetransporterrequest");
-		mv.addObject("transporter", transporter);
-		
-		return mv;
-	}
-	
-	@RequestMapping("approveVehicleRequest")
-	public ModelAndView seeApproveVehicleRequest()
-	{
-		List<Vehicle> vehicle=transporterService.showAllVehicleNotApprovedService();
-		
-		ModelAndView mv=new ModelAndView("AdminApprovedVehicle");
-		mv.addObject("vehicle", vehicle);
-		
-		return mv;
-	}
-	
-	@RequestMapping("approveVehicle")
-	public ModelAndView approveVehicleRequest(@RequestParam ("number") String number)
-	{
-		transporterService.approveVehicleByAdminService(number);
-		ModelAndView mv=new ModelAndView("adminhome");
-		return mv;
-	}
-	
-	
-	@RequestMapping("approvetransporter")
-	public ModelAndView approveTransporterRequest(@RequestParam ("email") String email)
-	{
-		transporterService.approveTransporterService(email);
-		ModelAndView mv=new ModelAndView("adminhome");
-		return mv;
-	}
-	
-	@RequestMapping("removeDealByAdmin")
-	public ModelAndView deleteDeal(@RequestParam ("id") int id,@RequestParam ("email") String email)
-	{
-		transporterService.deleteDealByAdminService(id, email);
-		ModelAndView mv=new ModelAndView("adminhome");
-		return mv;
-	}
-	
-	
-	@RequestMapping("viewAllQueryAndResponse")
-	public ModelAndView viewAllQueryAndResponse(){
-	
-		//List<Deal> deal =customerService.ShowDealSoryByCityCustomerDeal(cityname);
-		List<QueryClass> response=transporterService.showAllCustomerQueryAndTransporterResponseService();	
-		ModelAndView mv=new ModelAndView("showqueryresponse");
-		mv.addObject("response", response);
-		return mv;
-	}
-	
-	
-	@RequestMapping("viewadmin")
-	public void viewTransporterData(@RequestParam("code") String name,HttpServletResponse response) throws IOException{
-		
-		File f = new File(name);
-		FileInputStream fis = new  FileInputStream(f);
-		byte b[]=new byte[fis.available()];
-		fis.read(b);
-		ServletOutputStream sos = response.getOutputStream();
-		sos.write(b);
-		sos.close();  
-		}	
-	*/
+
 }

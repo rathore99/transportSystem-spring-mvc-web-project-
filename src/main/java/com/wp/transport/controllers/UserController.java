@@ -21,9 +21,9 @@ public class UserController {
 	@Autowired
 	UserServices userService;
 
-	@RequestMapping(value="signup" ,method=RequestMethod.GET)
+	@RequestMapping(value="customer/signup" ,method=RequestMethod.GET)
 	public String showSignupForm() {
-		return "signup";
+		return "customer/signup";
 
 	}
 	@RequestMapping(value="login11" ,method=RequestMethod.GET)
@@ -32,16 +32,16 @@ public class UserController {
 		return "login";
 
 	}
-	@RequestMapping(value="saveuser", method=RequestMethod.POST)
+	@RequestMapping(value="customer/saveuser", method=RequestMethod.POST)
 	public ModelAndView saveUser(@Valid @ModelAttribute("user1") User user,BindingResult result, @RequestParam("userImg") MultipartFile imgFile) {
 
 		if(result.hasErrors()) {
-			ModelAndView modelAndVew = new ModelAndView("signup");
+			ModelAndView modelAndVew = new ModelAndView("customer/signup");
 			modelAndVew.addObject("errors", "Please provide required values");
 			return modelAndVew;
 		}
 		userService.addUser(user);
-		ModelAndView modelAndVew = new ModelAndView("customerInfo");
+		ModelAndView modelAndVew = new ModelAndView("customer/customerInfo");
 		return modelAndVew;
 
 	}

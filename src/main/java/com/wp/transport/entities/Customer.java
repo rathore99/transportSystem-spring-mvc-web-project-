@@ -7,7 +7,7 @@ import javax.persistence.Id;
 
 @Entity
 public class Customer {
-	@Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@Id @GeneratedValue(strategy = GenerationType.AUTO)
 	private int customerId;
 	private String firstName;
 	private String lastName;

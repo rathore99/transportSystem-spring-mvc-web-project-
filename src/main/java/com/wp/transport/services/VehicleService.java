@@ -20,6 +20,8 @@ public interface VehicleService {
 
 	public List<String> getAllvehicle(int transporterId);
 
-	public List<Vehicle> getUnapprovedVehicles();
+	public List<Vehicle> getUnapprovedVehicles(boolean status);
+	
+	public Vehicle getVehicleById(String id);
 
 }

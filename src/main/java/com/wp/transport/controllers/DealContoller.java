@@ -9,6 +9,8 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -33,6 +35,8 @@ public class DealContoller {
 	@Autowired
 	DealService dealService;
 	
+	@Autowired
+	JavaMailSender mailSender;
 
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
@@ -68,7 +72,11 @@ public class DealContoller {
 		if(dealService.addDeal(deal)) {
 		ModelAndView modelAndView = new ModelAndView("transporter/transporterHome");
 		modelAndView.addObject("msg","Deal Posted successully!!!");
-		System.out.println(deal);
+		SimpleMailMessage mailMessage=new SimpleMailMessage();
+		mailMessage.setTo("learnrahulrathore@gmail.com");
+		mailMessage.setSubject("new deal posted");
+		mailMessage.setText("please visit website .... new deal posted ");
+		mailSender.send(mailMessage);
 		return modelAndView;
 		}
 		
